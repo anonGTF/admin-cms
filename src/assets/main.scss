@@ -1,0 +1,59 @@
+@import 'bulma/sass/utilities/_all';
+@import 'bulma/sass/grid/columns';
+@import 'bulma/sass/components/navbar';
+
+$color-muted: #DADCE0;
+$color-white-muted: #F4F5F8;
+$color-brand: #1B69F6;
+$color-black-subtle: #C6CDDD;
+
+.bg-brand {
+  background-color: $color-brand;
+  color: white;
+}
+
+.text-brand {
+  color: $color-brand;
+}
+
+.bg-black-subtle {
+  background-color: $color-black-subtle;
+  color: white;
+}
+
+.text-black-subtle {
+  color: $color-black-subtle;
+}
+
+.bg-white-muted {
+  background-color: $color-white-muted;
+}
+
+.bg-color-muted {
+  background-color: $color-muted;
+}
+
+.bordered {
+  border: 1px solid $color-muted;
+}
+
+.box.is-rounded {
+  border-radius: 9999px;
+}
+
+.p-5-5 {
+  padding: 2rem !important;
+}
+
+.mb-5-5 {
+  margin-bottom: 2rem !important;
+}
+
+.mt-5-5 {
+  margin-top: 2rem !important;
+}
+
+.my-5-5 {
+  margin-top: 2rem !important;
+  margin-bottom: 2rem !important;
+}
