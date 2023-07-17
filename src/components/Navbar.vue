@@ -52,9 +52,9 @@
       <div class="navbar-end is-hidden-touch">
         <div class="navbar-item">
           <figure class="image is-32x32">
-            <img :src="avatarPlaceholder" class="is-rounded">
+            <img :src="user.avatar" class="is-rounded">
           </figure>
-          <p class="ml-3 is-size-6 has-text-weight-bold">Jane Doe</p>
+          <p class="ml-3 is-size-6 has-text-weight-bold">{{ user.name }}</p>
         </div>
       </div>
     </div>
@@ -87,9 +87,10 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
+  import { useUserStore } from '@/stores/user'
 
-  const showMobileMenu = ref<boolean>(false);
-  const avatarPlaceholder = "https://i.pravatar.cc/300"
+  const showMobileMenu = ref<boolean>(false)
+  const { user } = useUserStore()
 
   const menuItems = [
     {
@@ -142,6 +143,8 @@
 }
 
 .navbar-item img {
-  max-height: 100% !important;
+  height: 56px !important;
+  width: 56px !important;
+  object-fit: cover;
 }
 </style>

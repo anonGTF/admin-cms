@@ -8,8 +8,8 @@
 
 		<!-- CONTENT -->
     <box class="mt-5-5" title="Menu Footer">
-      <simple-table :fields="pages.fields" :items="pages.items">
-        <template #cell(actions)="{ value, item }">
+      <simple-table :fields="fields" :items="footerItems">
+				<template #cell(actions)="{ value, item }">
 					<router-link :to="`/footer/${toHypenString(item.section as string)}`">
 						<button class="button">
 							<span class="icon">
@@ -31,6 +31,7 @@
 	import SimpleTable from '@/components/SimpleTable.vue'
 	import Breadcrumb from '@/components/Breadcrumb.vue'
 	import { toHypenString } from '@/utils';
+import { useFooterStore } from '@/stores/footer';
 
   const breadcrumbSections = [
 		{ name: "dashboard", to: '/' },
@@ -45,12 +46,14 @@
 			{ label: "", key: "actions" }
 		],
 		items: [
-			{ id: 1, section: "Social Media", item: "almanshur.com", actions: null },
-			{ id: 2, section: "Shortcut Menu 1", item: "almanshur.com/tentang-yayasan", actions: null },
-			{ id: 3, section: "Shortcut Menu 2", item: "almanshur.com/laziz", actions: null },
-			{ id: 4, section: "Shortcut Menu 3", item: "almanshur.com/laziz", actions: null },
+			{ id: 1, section: "Social Media" },
+			{ id: 2, section: "Shortcut Menu 1" },
+			{ id: 3, section: "Shortcut Menu 2" },
+			{ id: 4, section: "Shortcut Menu 3" },
 		]
 	}
+
+	const { fields, footerItems } = useFooterStore()
 </script>
 
 <style scoped>

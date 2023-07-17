@@ -17,7 +17,7 @@
           <span>Buat Halaman Baru</span>
         </button>
       </template>
-      <simple-table :fields="pages.fields" :items="pages.items">
+      <simple-table :fields="fields" :items="pages">
         <template #cell(status)="{ value, item }">
           <span v-if="value === 'always'" class="has-text-weight-bold">Selalu aktif</span>
           <span v-else-if="value === 'active'" class="has-text-weight-bold text-brand">Aktif</span>
@@ -69,6 +69,7 @@
   import Box from '@/components/Box.vue'
 	import SimpleTable from '@/components/SimpleTable.vue'
 	import Breadcrumb from '@/components/Breadcrumb.vue'
+  import { usePagesStore } from '@/stores/pages';
 
   const breadcrumbSections = [
 		{ name: "dashboard", to: '/' },
@@ -76,19 +77,7 @@
 		{ name: "halaman", to: '/pages' },
 	]
 
-  const pages = {
-		fields: [
-			{ label: "Halaman", key: "page" },
-			{ label: "Permalink", key: "permalink"},
-			{ label: "Status", key: "status" },
-			{ label: "", key: "actions" }
-		],
-		items: [
-			{ id: 1, page: "Homepage", permalink: "almanshur.com", status: "always", actions: null },
-			{ id: 2, page: "Tentang Yayasan", permalink: "almanshur.com/tentang-yayasan", status: "active", actions: null },
-			{ id: 3, page: "Laziz", permalink: "almanshur.com/laziz", status: "inactive", actions: null },
-		]
-	}
+  const { pages, fields } = usePagesStore()
 </script>
 
 <style scoped>

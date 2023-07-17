@@ -39,13 +39,13 @@
         </button>
       </template>
       <swapable-expandable-table 
-        :fields="headers.fields" 
-        :child-fields="headers.childrenFields"
-        :initial-items="headers.items"
+        :fields="fields" 
+        :child-fields="childrenFields"
+        :initial-items="headers"
         :has-child="true"
       >
         <template #cell(delete)="{ value, item }">
-          <button class="button is-danger is-outlined">
+          <button class="button is-danger is-outlined" @click="deleteData(item.id)">
             <span class="icon is-small">
               <i class="mdi mdi-24px mdi-close"></i>
             </span>
@@ -57,12 +57,12 @@
         </template>
 
         <template #cell(permalink)="{ value, item }">
-          <input v-if="item.children.length === 0" v-model="item.permalink" class="input" type="text" placeholder="Masukkan permalink">
-          <p v-else class="text-brand">{{ `Punya ${item.children.length} menu turunan` }}</p>
+          <input v-if="item.children!.length === 0" v-model="item.permalink" class="input" type="text" placeholder="Masukkan permalink">
+          <p v-else class="text-brand">{{ `Punya ${item.children!.length} menu turunan` }}</p>
         </template>
 
         <template #cell(openNewTab)="{ value, item }">
-          <label v-if="item.children.length === 0" class="checkbox">
+          <label v-if="item.children!.length === 0" class="checkbox">
             <input type="checkbox" v-model="item.openNewTab">
             <span class="ml-2">Buka tab baru</span>
           </label>
@@ -70,13 +70,15 @@
         </template>
 
         <template #childCell(icon)>
-          <span class="icon is-small">
-            <i class="mdi mdi-24px mdi-arrow-right-bottom"></i>
-          </span>
+          <div class="my-1">
+            <span class="icon">
+              <i class="mdi mdi-24px mdi-arrow-right-bottom"></i>
+            </span>
+          </div>
         </template>
 
-        <template #childCell(delete)="{ value, item }">
-          <button class="button is-danger is-outlined">
+        <template #childCell(delete)="{ value, parent, item }">
+          <button class="button is-danger is-outlined" @click="deleteChild(item.id, parent.id)">
             <span class="icon is-small">
               <i class="mdi mdi-24px mdi-close"></i>
             </span>
@@ -97,9 +99,18 @@
             <span class="ml-2">Buka tab baru</span>
           </label>
         </template>
+
+        <template #childAction="{ item }">
+          <button class="button mb-4 ml-4" @click="appendChild(item.id)">
+            <span class="icon">
+              <i class="mdi mdi-plus"></i>
+            </span>
+            <span>Tambah menu turunan</span>
+          </button>
+        </template>
       </swapable-expandable-table>
 
-      <button class="button mt-4">
+      <button class="button mt-4" @click="appendData">
         <span class="icon">
           <i class="mdi mdi-plus"></i>
         </span>
@@ -121,6 +132,7 @@
 	import SwapableExpandableTable from '@/components/SwapableExpandableTable.vue'
 	import Breadcrumb from '@/components/Breadcrumb.vue'
   import { ref } from 'vue';
+  import { useHeaderStore } from '@/stores/header';
 
   const imageUrl = ref("https://www.signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png")
 
@@ -130,55 +142,7 @@
 		{ name: "bagian header", to: '/header' },
 	]
 
-  const headers = {
-		fields: [
-      { label: "", key: "delete" },
-			{ label: "Label", key: "label" },
-			{ label: "Permalink", key: "permalink"},
-			{ label: "", key: "openNewTab" }
-		],
-    childrenFields: [
-      { label: '', key: 'icon' },
-      { label: '', key: 'delete' },
-      { label: '', key: 'label' },
-      { label: '', key: 'permalink' },
-      { label: '', key: 'openNewTab' },
-    ],
-		items: [
-			{ 
-        id: 1, 
-        order: 1, 
-        label: "Tentang Yayasan", 
-        permalink: "tentang-yayasan", 
-        openNewTab: true ,
-        children: []
-      },
-      { 
-        id: 2, 
-        order: 2, 
-        label: "Laziz", 
-        permalink: "", 
-        status: "active", 
-        openNewTab: false,
-        children: [
-          { id: 1, order: 1, label: 'Sekolah Dasar', permalink: 'sekolah-dasar', openInNewTab: false },
-          { id: 4, order: 2, label: 'Taman Kanak', permalink: 'taman-kanak', openInNewTab: true },
-        ]
-      },
-			{ 
-        id: 3, 
-        order: 3, 
-        label: "Sekolah", 
-        permalink: "", 
-        status: "inactive", 
-        openNewTab: false,
-        children: [
-          { id: 1, order: 1, label: 'Sekolah Dasar', permalink: 'sekolah-dasar', openInNewTab: false },
-          { id: 4, order: 2, label: 'Taman Kanak', permalink: 'taman-kanak', openInNewTab: true },
-        ]
-      },
-		]
-	}
+  const { headers, fields, childrenFields, appendData, deleteData, appendChild, deleteChild } = useHeaderStore()
 </script>
 
 <style scoped>

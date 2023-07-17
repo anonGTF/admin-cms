@@ -71,6 +71,7 @@
                           :name="`childCell(${key})`"
                           :value="formatChild(child, (key as string))"
                           :item="child"
+                          :parent="item"
                           :format="(k: string) => formatChild(child, k)"
                         >
                           {{ formatChild(child, (key as string)) }}
@@ -106,12 +107,7 @@
                   </tr>
                 </tbody>
               </table>
-              <button class="button mb-4 ml-4">
-                <span class="icon">
-                  <i class="mdi mdi-plus"></i>
-                </span>
-                <span>Tambah menu turunan</span>
-              </button>
+              <slot name="childAction" :item="item"></slot>
             </div>
           </td>
         </tr>

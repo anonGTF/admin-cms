@@ -9,11 +9,11 @@
 		<!-- CONTENT -->
     <box class="mt-5-5" :title="getTitledString(section)">
       <swapable-expandable-table 
-        :fields="pages.fields" 
-        :initial-items="pages.items"
+        :fields="fields" 
+        :initial-items="items"
       >
         <template #cell(delete)="{ value, item }">
-          <button class="button is-danger is-outlined">
+          <button class="button is-danger is-outlined" @click="deleteData(item.id, section)">
             <span class="icon is-small">
               <i class="mdi mdi-24px mdi-close"></i>
             </span>
@@ -36,7 +36,7 @@
         </template>
       </swapable-expandable-table>
 
-      <button class="button">
+      <button class="button" @click="appendData(section)">
         <span class="icon">
           <i class="mdi mdi-plus"></i>
         </span>
@@ -55,6 +55,7 @@
   import { getTitledString } from '@/utils'
   import { useRoute } from 'vue-router';
   import { ref } from 'vue';
+  import { useFooterStore } from '@/stores/footer';
 
   const path = useRoute().path
   const section = ref(path.split('/').slice(-1)[0])
@@ -66,18 +67,8 @@
 		{ name: getTitledString(section.value), to: path },
 	]
 
-  const pages = {
-		fields: [
-			{ label: "", key: "delete" },
-			{ label: "Sosial Media", key: "socialMedia"},
-			{ label: "Permalink", key: "permalink" },
-      { label: "", key: "openNewTab" }
-		],
-		items: [
-			{ id: 1, order: 1, socialMedia: "Instagram", permalink: "https://instagram.com", openNewTab: false },
-			{ id: 2, order: 2, socialMedia: "Tiktok", permalink: "https://instagram.com", openNewTab: false },
-		]
-	}
+  const { detailFields: fields, getCorrectItems, appendData, deleteData } = useFooterStore()
+  const items = getCorrectItems(section.value)
 </script>
 
 <style scoped>

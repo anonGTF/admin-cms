@@ -8,6 +8,7 @@ import HeaderView from '@/views/header/HeaderView.vue'
 import FooterView from '@/views/footer/FooterView.vue'
 import DetailFooterView from '@/views/footer/DetailFooterView.vue'
 import ProfileView from '@/views/profile/ProfileView.vue'
+import EditProfileView from '@/views/profile/EditProfileView.vue'
 import DashboardLayout from '@/layouts/DashboardLayout.vue'
 
 const router = createRouter({
@@ -57,6 +58,11 @@ const router = createRouter({
           path: '/profile',
           name: 'profile',
           component: ProfileView
+        },
+        {
+          path: '/profile/edit',
+          name: 'edit profile',
+          component: EditProfileView
         },
       ]
     },
