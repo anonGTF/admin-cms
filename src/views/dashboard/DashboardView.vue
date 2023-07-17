@@ -15,7 +15,7 @@
 
 		<!-- CONTENT -->
 
-		<div class="columns">
+		<div class="columns is-desktop">
 			<div class="column pr-4">
 
 				<box title="Pengunjung">

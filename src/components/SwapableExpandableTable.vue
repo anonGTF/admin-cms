@@ -1,119 +1,123 @@
 <template>
-  <table class="table is-hoverable">
-    <thead>
-      <th v-for="field in fields">
-        <slot :name="`head(${field.key})`" :field="field">
-          {{ field.label }}
-        </slot>
-      </th>
-      <th v-if="hasChild" class="is-narrow"></th>
-      <th>Urutan</th>
-    </thead>
-    <tbody>
-      <template v-for="item in orderedItems" :key="item.id">
-        <tr>
-          <td template v-for="key in fieldKeys">
-            <slot
-              :name="`cell(${key})`"
-              :value="format(item, (key as string))"
-              :item="item"
-              :format="(k: string) => format(item, k)"
-            >
-              {{ format(item, (key as string)) }}
-            </slot>
-          </td>
-          <td v-if="hasChild" class="bg-black-subtle is-narrow">
-            <button 
-              class="button is-outlined"
-              @click="expand(item)"
-            >
-              <span class="icon is-small">
-                <i class="mdi" :class="[(item.isExpanded) ? 'mdi-chevron-up' : 'mdi-chevron-down']"></i>
-              </span>
-            </button>
-          </td>
-          <td>
-            <div class="field is-grouped">
-              <div class="control">
-                <button 
-                  class="button is-outlined" 
-                  @click="swapRow(item.order, 'up')" 
-                  :disabled="item.order === 1"
-                >
-                  <span class="icon is-small">
-                    <i class="mdi mdi-arrow-up"></i>
-                  </span>
-                </button>
+  <div class="table-container">
+    <table class="table is-hoverable">
+      <thead>
+        <th v-for="field in fields">
+          <slot :name="`head(${field.key})`" :field="field">
+            {{ field.label }}
+          </slot>
+        </th>
+        <th v-if="hasChild" class="is-narrow"></th>
+        <th>Urutan</th>
+      </thead>
+      <tbody>
+        <template v-for="item in orderedItems" :key="item.id">
+          <tr>
+            <td template v-for="key in fieldKeys">
+              <slot
+                :name="`cell(${key})`"
+                :value="format(item, (key as string))"
+                :item="item"
+                :format="(k: string) => format(item, k)"
+              >
+                {{ format(item, (key as string)) }}
+              </slot>
+            </td>
+            <td v-if="hasChild" class="bg-black-subtle is-narrow">
+              <button 
+                class="button is-outlined"
+                @click="expand(item)"
+              >
+                <span class="icon is-small">
+                  <i class="mdi" :class="[(item.isExpanded) ? 'mdi-chevron-up' : 'mdi-chevron-down']"></i>
+                </span>
+              </button>
+            </td>
+            <td>
+              <div class="field is-grouped">
+                <div class="control">
+                  <button 
+                    class="button is-outlined" 
+                    @click="swapRow(item.order, 'up')" 
+                    :disabled="item.order === 1"
+                  >
+                    <span class="icon is-small">
+                      <i class="mdi mdi-arrow-up"></i>
+                    </span>
+                  </button>
+                </div>
+                <div class="control">
+                  <button 
+                    class="button is-outlined"
+                    @click="swapRow(item.order, 'down')" 
+                    :disabled="item.order === items.length"
+                  >
+                    <span class="icon is-small">
+                      <i class="mdi mdi-arrow-down"></i>
+                    </span>
+                  </button>
+                </div>
               </div>
-              <div class="control">
-                <button 
-                  class="button is-outlined"
-                  @click="swapRow(item.order, 'down')" 
-                  :disabled="item.order === items.length"
-                >
-                  <span class="icon is-small">
-                    <i class="mdi mdi-arrow-down"></i>
-                  </span>
-                </button>
+            </td>
+          </tr>
+          <tr v-if="item.isExpanded">
+            <td colspan="100" class="bg-white-muted">
+              <div class="bg-white-muted">
+                <div class="table-container">
+                  <table class="table is-hoverable bg-white-muted">
+                    <tbody>
+                      <tr v-for="child in orderedChildren(item)">
+                        <template v-for="key in childKeys">
+                          <td>
+                            <slot
+                              :name="`childCell(${key})`"
+                              :value="formatChild(child, (key as string))"
+                              :item="child"
+                              :parent="item"
+                              :format="(k: string) => formatChild(child, k)"
+                            >
+                              {{ formatChild(child, (key as string)) }}
+                            </slot>
+                          </td>
+                        </template>
+                        <td>
+                          <div class="field is-grouped">
+                            <div class="control">
+                              <button 
+                                class="button is-outlined" 
+                                @click="swapChildRow(child.order, 'up', item)" 
+                                :disabled="child.order === 1"
+                              >
+                                <span class="icon is-small">
+                                  <i class="mdi mdi-arrow-up"></i>
+                                </span>
+                              </button>
+                            </div>
+                            <div class="control">
+                              <button 
+                                class="button is-outlined"
+                                @click="swapChildRow(child.order, 'down', item)" 
+                                :disabled="child.order === item.children?.length"
+                              >
+                                <span class="icon is-small">
+                                  <i class="mdi mdi-arrow-down"></i>
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <slot name="childAction" :item="item"></slot>
               </div>
-            </div>
-          </td>
-        </tr>
-        <tr v-if="item.isExpanded">
-          <td colspan="100" class="bg-white-muted">
-            <div class="bg-white-muted">
-              <table class="table is-hoverable bg-white-muted">
-                <tbody>
-                  <tr v-for="child in orderedChildren(item)">
-                    <template v-for="key in childKeys">
-                      <td>
-                        <slot
-                          :name="`childCell(${key})`"
-                          :value="formatChild(child, (key as string))"
-                          :item="child"
-                          :parent="item"
-                          :format="(k: string) => formatChild(child, k)"
-                        >
-                          {{ formatChild(child, (key as string)) }}
-                        </slot>
-                      </td>
-                    </template>
-                    <td>
-                      <div class="field is-grouped">
-                        <div class="control">
-                          <button 
-                            class="button is-outlined" 
-                            @click="swapChildRow(child.order, 'up', item)" 
-                            :disabled="child.order === 1"
-                          >
-                            <span class="icon is-small">
-                              <i class="mdi mdi-arrow-up"></i>
-                            </span>
-                          </button>
-                        </div>
-                        <div class="control">
-                          <button 
-                            class="button is-outlined"
-                            @click="swapChildRow(child.order, 'down', item)" 
-                            :disabled="child.order === item.children?.length"
-                          >
-                            <span class="icon is-small">
-                              <i class="mdi mdi-arrow-down"></i>
-                            </span>
-                          </button>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <slot name="childAction" :item="item"></slot>
-            </div>
-          </td>
-        </tr>
-      </template>
-    </tbody>
-  </table>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup lang="ts">

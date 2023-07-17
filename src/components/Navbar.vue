@@ -42,7 +42,7 @@
                 :to="childItem.link"
                 class="navbar-item"
               >
-                <span>{{ childItem.name }}</span>
+                <span @click="showMobileMenu = false">{{ childItem.name }}</span>
               </router-link>
             </div>
           </div>

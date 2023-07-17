@@ -1,29 +1,31 @@
 <template>
-  <table class="table is-striped is-hoverable">
-    <thead>
-      <th v-for="field in fields">
-          <slot :name="`head(${field.key})`" :field="field">
-            {{ field.label }}
-          </slot>
-        </th>
-    </thead>
-    <tbody>
-      <tr v-for="item in items" :key="item.id">
-        <template v-for="key in fieldKeys">
-          <td>
-            <slot
-              :name="`cell(${key})`"
-              :value="format(item, (key as string))"
-              :item="item"
-              :format="(k: string) => format(item, k)"
-            >
-              {{ format(item, (key as string)) }}
+  <div class="table-container">
+    <table class="table is-striped is-hoverable">
+      <thead>
+        <th v-for="field in fields">
+            <slot :name="`head(${field.key})`" :field="field">
+              {{ field.label }}
             </slot>
-          </td>
-        </template>
-      </tr>
-    </tbody>
-  </table>
+          </th>
+      </thead>
+      <tbody>
+        <tr v-for="item in items" :key="item.id">
+          <template v-for="key in fieldKeys">
+            <td>
+              <slot
+                :name="`cell(${key})`"
+                :value="format(item, (key as string))"
+                :item="item"
+                :format="(k: string) => format(item, k)"
+              >
+                {{ format(item, (key as string)) }}
+              </slot>
+            </td>
+          </template>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup lang="ts">
